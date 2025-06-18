@@ -1,5 +1,5 @@
 import FormCard from "@/components/common/FormCard";
-import Logo from "@/components/icons/Logo";
+import { Logo } from "@/components/icons/Logo";
 
 export default function AuthCard({ children }: { children: React.ReactNode }) {
   return (
