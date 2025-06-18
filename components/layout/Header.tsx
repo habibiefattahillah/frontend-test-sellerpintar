@@ -1,8 +1,12 @@
+"use client";
+
 import { SidebarTrigger } from "../ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import Link from "next/link";
+import { usePageTitle } from "@/context/PageTitleContext";
 
-export default function AppHeader({ title }: { title: string }) {
+export default function AppHeader() {
+  const { title } = usePageTitle();
   return (
     <header className="flex items-center justify-between p-4 border text-black sticky top-0 bg-white z-10 shadow">
       <div className="flex items-center space-x-4">

@@ -26,7 +26,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "../ui/button";
-import { PlusIcon } from "lucide-react";
+import { ChevronLeft, PlusIcon } from "lucide-react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -87,6 +87,8 @@ export function DataTable<TData, TValue>({
       pageNumbers.push("...");
     }
   }
+
+  const [inputValue, setInputValue] = useState<number | string>(page);
 
   return (
     <div className="space-y-4">
@@ -181,12 +183,16 @@ export function DataTable<TData, TValue>({
         className="sticky bottom-0 bg-white py-2 flex items-center justify-center gap-2 shadow z-10"
       >
         <Button
-          variant="outline"
+          variant="ghost"
           size="sm"
           onClick={() => setPage(page - 1)}
           disabled={page <= 1}
         >
-          {"< previous"}
+          {
+            <>
+              <ChevronLeft /> <p className="hidden sm:inline">Previous</p>
+            </>
+          }
         </Button>
 
         {Array.from({ length: 3 }).map((_, i) => {
@@ -197,14 +203,41 @@ export function DataTable<TData, TValue>({
 
           if (pageNumber < 1 || pageNumber > pageCount) return null;
 
-          return (
+          return pageNumber === page ? (
+            <Input
+              key={pageNumber}
+              type="text"
+              min={1}
+              max={pageCount}
+              className="w-14 text-center font-bold shadow-md"
+              onChange={(e) => {
+                let val = Number(e.target.value);
+                if (val < 1) val = 1;
+                if (val > pageCount) val = pageCount;
+                setInputValue(val);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  let val = Number((e.target as HTMLInputElement).value);
+                  if (val < 1) val = 1;
+                  if (val > pageCount) val = pageCount;
+                  setPage(val);
+                }
+              }}
+              onBlur={() => {
+                let val = Number(inputValue);
+                if (val < 1) val = 1;
+                if (val > pageCount) val = pageCount;
+                setPage(val);
+              }}
+              value={typeof inputValue === "number" ? inputValue : page}
+              onFocus={(e) => e.target.select()}
+            />
+          ) : (
             <Button
               key={pageNumber}
-              variant={pageNumber === page ? "outline" : "ghost"}
+              variant="ghost"
               size="sm"
-              className={
-                pageNumber === page ? "border border-primary font-bold" : ""
-              }
               onClick={() => setPage(pageNumber)}
             >
               {pageNumber}
@@ -213,12 +246,13 @@ export function DataTable<TData, TValue>({
         })}
 
         <Button
-          variant="outline"
+          variant="ghost"
           size="sm"
           onClick={() => setPage(page + 1)}
           disabled={page >= pageCount}
         >
-          {"next >"}
+          <p className="hidden sm:inline">Next</p>{" "}
+          <ChevronLeft className="rotate-180" />
         </Button>
       </div>
     </div>

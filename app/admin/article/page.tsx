@@ -5,12 +5,14 @@ import { DataTable } from "@/components/common/DataTable";
 import { articleColumn } from "./columns";
 import { Article } from "@/types/article";
 import { getArticles } from "@/lib/getArticles";
+import { usePageTitle } from "@/context/PageTitleContext";
 
 export default function ArticlePage() {
   const [articles, setArticles] = useState<Article[]>([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
+  const { setTitle } = usePageTitle();
 
   useEffect(() => {
     setLoading(true);
@@ -21,6 +23,10 @@ export default function ArticlePage() {
       })
       .finally(() => setLoading(false));
   }, [page]);
+
+  useEffect(() => {
+    setTitle("Article");
+  }, [setTitle]);
 
   return (
     <div className="p-6">
