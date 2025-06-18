@@ -36,7 +36,7 @@ export default function AppSidebar() {
       <SidebarHeader className="pt-8 px-4 bg-primary">
         <LogoDark className="w-32" />
       </SidebarHeader>
-      <SidebarContent className="px-2 bg-primary">
+      <SidebarContent className="px-4 bg-primary">
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
