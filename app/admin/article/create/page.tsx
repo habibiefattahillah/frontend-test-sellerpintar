@@ -1,25 +1,14 @@
 "use client";
 
-import { z } from "zod";
 import { Button } from "@/components/ui/button";
 
 import { ArrowLeft } from "lucide-react";
-import dynamic from "next/dynamic";
 import { useState } from "react";
 
 import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
 import ArticleForm from "@/components/article/ArticleForm";
-
-const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
-
-const formSchema = z.object({
-  title: z.string().min(1, "Title is required"),
-  category: z.string().min(1, "Category is required"),
-  content: z.string().min(1, "Content is required"),
-});
-
-type ArticleFormValues = z.infer<typeof formSchema>;
+import { ArticleFormValues } from "@/types/article";
 
 export default function ArticleCreate() {
   const [thumbnail, setThumbnail] = useState<File | null>(null);
@@ -36,7 +25,7 @@ export default function ArticleCreate() {
       <div className="bg-white shadow-md rounded-lg border py-6 space-y-4">
         <Button
           variant="ghost"
-          className="flex items-center space-x-2 px-6"
+          className="flex items-center space-x-2 mx-6"
           onClick={() => {
             const parentPath =
               window.location.pathname.replace(/\/[^/]+$/, "") || "/";

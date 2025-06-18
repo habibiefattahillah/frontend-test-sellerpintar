@@ -1,18 +1,11 @@
-// types/article.ts
 import { z } from "zod";
+import { CategorySchema } from "./category";
+import { UserSchema } from "./user";
 
-export const CategorySchema = z.object({
-  id: z.string(),
-  name: z.string(),
-  userId: z.string(),
-  createdAt: z.string(),
-  updatedAt: z.string(),
-});
-
-export const UserSchema = z.object({
-  id: z.string(),
-  username: z.string(),
-  role: z.string(),
+const ArticleFormSchema = z.object({
+  title: z.string().min(1, "Title is required"),
+  category: z.string().min(1, "Category is required"),
+  content: z.string().min(1, "Content is required"),
 });
 
 export const ArticleSchema = z.object({
@@ -34,5 +27,11 @@ export const ArticleResponseSchema = z.object({
   limit: z.number(),
 });
 
+export const SingleArticleResponseSchema = z.object({
+  data: ArticleSchema,
+});
+
 export type ArticleResponse = z.infer<typeof ArticleResponseSchema>;
 export type Article = z.infer<typeof ArticleSchema>;
+export type ArticleFormValues = z.infer<typeof ArticleFormSchema>;
+export type SingleArticleResponse = z.infer<typeof SingleArticleResponseSchema>;

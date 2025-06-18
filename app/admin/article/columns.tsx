@@ -45,7 +45,7 @@ export const articleColumn: ColumnDef<Article>[] = [
           Preview
         </Link>
         <Link
-          href={`/admin/article/${row.getValue("id")}/edit`}
+          href={`/admin/article/edit?id=${row.getValue("id")}`}
           className="text-blue-500 hover:underline"
         >
           Edit

@@ -54,3 +54,23 @@ export async function getArticles(page: number) {
     };
   }
 }
+
+import { SingleArticleResponseSchema } from "@/types/article";
+
+export async function getArticleById(id: string) {
+  try {
+    const res = await fetch(
+      `https://test-fe.mysellerpintar.com/articles/${id}`
+    );
+
+    if (!res.ok) throw new Error("Failed to fetch article");
+
+    const json = await res.json();
+    const parsed = SingleArticleResponseSchema.parse(json);
+
+    return parsed.data;
+  } catch (err) {
+    console.error("Using dummy data due to fetch/Zod error:", err);
+    return dummyArticles.find((article) => article.id === id) || null;
+  }
+}
