@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-export default function FormCard({
+export default function CommonCard({
   title,
   description,
   children,

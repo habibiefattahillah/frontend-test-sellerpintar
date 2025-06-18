@@ -43,6 +43,12 @@ export default function ArticlePage() {
             page={page}
             setPage={setPage}
             total={total}
+            addButton={{
+              text: "Add Article",
+              onClick: () => {
+                alert("Add Article clicked!");
+              },
+            }}
           />
         )}
       </div>

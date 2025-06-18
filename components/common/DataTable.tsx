@@ -34,6 +34,10 @@ interface DataTableProps<TData, TValue> {
   page: number;
   setPage: (page: number) => void;
   total: number;
+  addButton: {
+    text?: string;
+    onClick?: () => void;
+  };
 }
 
 export function DataTable<TData, TValue>({
@@ -42,6 +46,7 @@ export function DataTable<TData, TValue>({
   page,
   setPage,
   total,
+  addButton,
 }: DataTableProps<TData, TValue>) {
   const [filterColumn, setFilterColumn] = useState<string | undefined>();
   const [filterValue, setFilterValue] = useState("");
@@ -120,15 +125,18 @@ export function DataTable<TData, TValue>({
           disabled={!filterColumn}
         />
 
-        <Button
-          className="ml-auto"
-          onClick={() => {
-            alert("Add Article clicked!");
-          }}
-        >
-          <PlusIcon className="h-4 w-4" />
-          Add Article
-        </Button>
+        {addButton.text && addButton.onClick && (
+          <Button
+            className="ml-auto"
+            onClick={() => {
+              const currentPath = window.location.pathname;
+              window.location.href = `${currentPath.replace(/\/$/, "")}/create`;
+            }}
+          >
+            <PlusIcon className="h-4 w-4" />
+            {addButton.text}
+          </Button>
+        )}
       </div>
 
       <div className="border">
