@@ -126,13 +126,7 @@ export function DataTable<TData, TValue>({
         />
 
         {addButton.text && addButton.onClick && (
-          <Button
-            className="ml-auto"
-            onClick={() => {
-              const currentPath = window.location.pathname;
-              window.location.href = `${currentPath.replace(/\/$/, "")}/create`;
-            }}
-          >
+          <Button className="ml-auto" onClick={addButton.onClick}>
             <PlusIcon className="h-4 w-4" />
             {addButton.text}
           </Button>

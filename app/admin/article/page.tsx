@@ -46,7 +46,11 @@ export default function ArticlePage() {
             addButton={{
               text: "Add Article",
               onClick: () => {
-                alert("Add Article clicked!");
+                const currentPath = window.location.pathname;
+                window.location.href = `${currentPath.replace(
+                  /\/$/,
+                  ""
+                )}/create`;
               },
             }}
           />
