@@ -1,37 +1,44 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { DataTable } from "@/components/common/DataTable";
 import { articleColumn } from "./columns";
 import { Article } from "@/types/article";
-
-const data: Article[] = [
-  {
-    id: "1",
-    title: "Sample Article",
-    content: "This is a sample article content.",
-    userId: "user1",
-    categoryId: "category1",
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    category: {
-      id: "category1",
-      name: "Sample Category",
-      userId: "user1",
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    },
-    user: { id: "user1", username: "sampleuser", role: "admin" },
-  },
-];
+import { getArticles } from "@/lib/getArticles";
 
 export default function ArticlePage() {
+  const [articles, setArticles] = useState<Article[]>([]);
+  const [total, setTotal] = useState(0);
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setLoading(true);
+    getArticles(page)
+      .then((res) => {
+        setArticles(res.data);
+        setTotal(res.total);
+      })
+      .finally(() => setLoading(false));
+  }, [page]);
+
   return (
     <div className="p-6">
       <div className="bg-white shadow-md rounded-lg border py-6 space-y-4">
         <h1 className="text-lg font-semibold border-b pb-2 px-6">
-          Total Articles: {data.length}
+          Total Articles: {total}
         </h1>
-        <DataTable columns={articleColumn} data={data} />
+        {loading ? (
+          <p className="text-center">Loading...</p>
+        ) : (
+          <DataTable
+            columns={articleColumn}
+            data={articles}
+            page={page}
+            setPage={setPage}
+            total={total}
+          />
+        )}
       </div>
     </div>
   );

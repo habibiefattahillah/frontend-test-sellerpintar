@@ -14,6 +14,7 @@ import {
   getFilteredRowModel,
   useReactTable,
   ColumnDef,
+  getPaginationRowModel,
 } from "@tanstack/react-table";
 import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
@@ -30,11 +31,17 @@ import { PlusIcon } from "lucide-react";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  page: number;
+  setPage: (page: number) => void;
+  total: number;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  page,
+  setPage,
+  total,
 }: DataTableProps<TData, TValue>) {
   const [filterColumn, setFilterColumn] = useState<string | undefined>();
   const [filterValue, setFilterValue] = useState("");
@@ -44,10 +51,15 @@ export function DataTable<TData, TValue>({
     columns,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
     state: {},
     initialState: {
       columnVisibility: {
         id: false,
+      },
+      pagination: {
+        pageIndex: 0,
+        pageSize: 10,
       },
     },
   });
@@ -61,6 +73,20 @@ export function DataTable<TData, TValue>({
       selectedColumn.setFilterValue(filterValue);
     }
   }, [selectedColumn, filterValue]);
+
+  const pageIndex = table.getState().pagination?.pageIndex ?? 0;
+  const pageCount = Math.ceil(total / 10);
+
+  let pageNumbers: (number | string)[] = [];
+  if (pageCount > 0) {
+    if (pageIndex > 0) {
+      pageNumbers.push(pageIndex);
+    }
+    pageNumbers.push(pageIndex + 1);
+    if (pageIndex < pageCount - 1) {
+      pageNumbers.push("...");
+    }
+  }
 
   return (
     <div className="space-y-4">
@@ -147,6 +173,53 @@ export function DataTable<TData, TValue>({
             )}
           </TableBody>
         </Table>
+      </div>
+
+      {/* Pagination Controls */}
+      <div
+        id="pagination"
+        className="sticky bottom-0 bg-white py-2 flex items-center justify-center gap-2 shadow z-10"
+      >
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setPage(page - 1)}
+          disabled={page <= 1}
+        >
+          {"< previous"}
+        </Button>
+
+        {Array.from({ length: 3 }).map((_, i) => {
+          let pageNumber = page;
+          if (page <= 1) pageNumber = i + 1;
+          else if (page >= pageCount) pageNumber = pageCount - 2 + i;
+          else pageNumber = page - 1 + i;
+
+          if (pageNumber < 1 || pageNumber > pageCount) return null;
+
+          return (
+            <Button
+              key={pageNumber}
+              variant={pageNumber === page ? "outline" : "ghost"}
+              size="sm"
+              className={
+                pageNumber === page ? "border border-primary font-bold" : ""
+              }
+              onClick={() => setPage(pageNumber)}
+            >
+              {pageNumber}
+            </Button>
+          );
+        })}
+
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setPage(page + 1)}
+          disabled={page >= pageCount}
+        >
+          {"next >"}
+        </Button>
       </div>
     </div>
   );
